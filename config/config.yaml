@@ -1,6 +1,6 @@
 # config/config.yaml
 
-mode: eval  # or "train"
+mode: eval  # "traub" or "eval"
 
 data:
   dataset_name: ag_news

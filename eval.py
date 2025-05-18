@@ -6,6 +6,10 @@ import pandas as pd
 import os
 import pickle
 
+from data.data_loader import TextDataset
+from torch.utils.data import DataLoader
+import re
+
 def evaluate_model(config):
     print("🚀 Starting evaluation...")
 
@@ -25,7 +29,8 @@ def evaluate_model(config):
     texts = df["text"].tolist()
     labels = df["label"].tolist()
 
-    _, val_loader, vocab = get_data_loaders(config, texts, labels)
+    test_ds = TextDataset(texts, labels, vocab, config["data"]["max_seq_len"])
+    val_loader = DataLoader(test_ds, batch_size=config["data"]["batch_size"])
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = DNNClassifier(
@@ -51,3 +56,23 @@ def evaluate_model(config):
     acc = accuracy_score(all_labels, all_preds)
     f1 = f1_score(all_labels, all_preds, average="macro")
     print(f"✅ Eval Accuracy: {acc:.4f}, Macro F1: {f1:.4f}")
+
+    # Count <unk> tokens
+    unk_token = vocab["<unk>"]
+    unk_count = 0
+    total_tokens = 0
+
+    for text in texts:
+        tokens = re.findall(r"\b\w+\b", text.lower())
+        for tok in tokens:
+            total_tokens += 1
+            if tok not in vocab:
+                unk_count += 1
+
+    unk_ratio = unk_count / total_tokens
+    print(f"📉 Unseen tokens: {unk_count} out of {total_tokens} ({unk_ratio:.2%})")
+
+    oov_tokens = [tok for text in texts for tok in re.findall(r"\b\w+\b", text.lower()) if tok not in vocab]
+    from collections import Counter
+    print(Counter(oov_tokens).most_common(10))
+
