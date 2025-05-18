@@ -4,6 +4,15 @@ import torch.optim as optim
 from model.dnn import DNNClassifier
 from data.data_loader import get_data_loaders
 import pandas as pd
+import pickle
+import os
+
+# Construct full paths
+save_dir = config["misc"]["save_dir"]
+os.makedirs(save_dir, exist_ok=True)
+
+model_path = os.path.join(save_dir, config["misc"]["model_file"])
+vocab_path = os.path.join(save_dir, config["misc"]["vocab_file"])
 
 def train_model(config):
     print("🚀 Starting training...")
@@ -50,3 +59,6 @@ def train_model(config):
 
     torch.save(model.state_dict(), config["misc"]["save_path"])
     print(f"✅ Model saved to {config['misc']['save_path']}")
+    
+    with open("vocab.pkl") as f:
+      vocab = pickle.dump(vocab, f)

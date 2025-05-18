@@ -1,6 +1,6 @@
 # config/config.yaml
 
-mode: train  # or "eval"
+mode: eval  # or "train"
 
 data:
   dataset_name: ag_news
@@ -20,5 +20,7 @@ training:
   weight_decay: 0.0001
 
 misc:
-  save_path: "saved_model.pt"
+  save_dir: "checkpoints"
+  model_file: "saved_model.pt"
+  vocab_file: "vocab.pkl"
   seed: 42

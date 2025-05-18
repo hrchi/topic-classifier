@@ -7,7 +7,7 @@ import pandas as pd
 def evaluate_model(config):
     print("🚀 Starting evaluation...")
 
-    df = pd.read_csv("https://raw.githubusercontent.com/mhjabreel/CharCnn_Keras/master/data/ag_news_csv/train.csv", header=None)
+    df = pd.read_csv("https://raw.githubusercontent.com/mhjabreel/CharCnn_Keras/master/data/ag_news_csv/test.csv", header=None)
     df.columns = ["label", "title", "description"]
     df["text"] = df["title"] + " " + df["description"]
     df["label"] = df["label"] - 1
