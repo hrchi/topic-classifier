@@ -7,15 +7,15 @@ import pandas as pd
 import pickle
 import os
 
-# Construct full paths
-save_dir = config["misc"]["save_dir"]
-os.makedirs(save_dir, exist_ok=True)
-
-model_path = os.path.join(save_dir, config["misc"]["model_file"])
-vocab_path = os.path.join(save_dir, config["misc"]["vocab_file"])
 
 def train_model(config):
     print("🚀 Starting training...")
+
+    # Construct full paths
+    save_dir = config["misc"]["save_dir"]
+    os.makedirs(save_dir, exist_ok=True)
+    model_path = os.path.join(save_dir, config["misc"]["model_file"])
+    vocab_path = os.path.join(save_dir, config["misc"]["vocab_file"])
 
     df = pd.read_csv("https://raw.githubusercontent.com/mhjabreel/CharCnn_Keras/master/data/ag_news_csv/train.csv", header=None)
     df.columns = ["label", "title", "description"]
@@ -57,8 +57,8 @@ def train_model(config):
                 print(f"   Step {i+1}/{len(train_loader)} | Batch loss: {loss.item():.4f}")
         print(f"✅ Epoch {epoch+1} done. Avg Loss: {total_loss / len(train_loader):.4f}")
 
-    torch.save(model.state_dict(), config["misc"]["save_path"])
-    print(f"✅ Model saved to {config['misc']['save_path']}")
+    torch.save(model.state_dict(), model_path)
+    print(f"✅ Model saved to {model_path}")
     
-    with open("vocab.pkl") as f:
-      vocab = pickle.dump(vocab, f)
+    with open(vocab_path, "wb") as f:
+      pickle.dump(vocab, f)

@@ -3,9 +3,19 @@ from model.dnn import DNNClassifier
 from data.data_loader import get_data_loaders
 from sklearn.metrics import accuracy_score, f1_score
 import pandas as pd
+import os
+import pickle
 
 def evaluate_model(config):
     print("🚀 Starting evaluation...")
+
+    # Construct full paths
+    save_dir = config["misc"]["save_dir"]
+    os.makedirs(save_dir, exist_ok=True)
+    model_path = os.path.join(save_dir, config["misc"]["model_file"])
+    vocab_path = os.path.join(save_dir, config["misc"]["vocab_file"])
+    with open(vocab_path, "rb") as f:
+      vocab = pickle.load(f)
 
     df = pd.read_csv("https://raw.githubusercontent.com/mhjabreel/CharCnn_Keras/master/data/ag_news_csv/test.csv", header=None)
     df.columns = ["label", "title", "description"]
@@ -26,7 +36,7 @@ def evaluate_model(config):
         dropout=config["model"]["dropout"]
     ).to(device)
 
-    model.load_state_dict(torch.load(config["misc"]["save_path"]))
+    model.load_state_dict(torch.load(model_path))
     model.eval()
 
     all_preds, all_labels = [], []
