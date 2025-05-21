@@ -6,12 +6,24 @@ A concise reference for core deep learning concepts, especially for building and
 
 ## 1. Activation Functions
 
-| Function | Formula                  | Notes                          |
-|----------|--------------------------|---------------------------------|
-| ReLU     | `max(0, x)`              | Fast, prevents saturation       |
-| Sigmoid  | \( \frac{1}{1 + e^{-x}} \) | Good for binary output          |
-| Tanh     | \( \frac{e^x - e^{-x}}{e^x + e^{-x}} \) | Zero-centered sigmoid |
-| GELU     | Smooth ReLU variant      | Common in Transformer models    |
+| Function | Description                 |
+|----------|-----------------------------|
+| ReLU     | Outputs `max(0, x)`         |
+| Sigmoid  | Squashes input to [0, 1]    |
+| Tanh     | Zero-centered sigmoid       |
+| GELU     | Smooth ReLU used in BERT    |
+
+### Common Activation Function Formulas
+
+**Sigmoid:**
+$$
+\text{sigmoid}(x) = \frac{1}{1 + e^{-x}}
+$$
+
+**Tanh:**
+$$
+\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}
+$$
 
 ---
 
