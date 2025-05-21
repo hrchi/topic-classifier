@@ -60,4 +60,4 @@ A concise reference for common deep learning concepts, especially for training a
 The scaled dot-product attention:
 
 ```math
-\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{Q K^\top}{\sqrt{d_k}}\right) V
+$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{Q K^\top}{\sqrt{d_k}}\right) V$
