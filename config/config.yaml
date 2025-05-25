@@ -1,11 +1,10 @@
-# config/config.yaml
-
-mode: eval  # "train" or "eval"
+mode: train  # "train" or "eval"
 
 data:
   dataset_name: ag_news
   batch_size: 64
   max_seq_len: 128
+  val_split: 0.1
 
 model:
   type: dnn  # you can later switch to "lstm" or "transformer"
@@ -15,7 +14,8 @@ model:
   num_classes: 4
 
 training:
-  epochs: 10
+  epochs: 4
+  patience: 3
   lr: 0.001
   weight_decay: 0.0001
 

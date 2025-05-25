@@ -1,7 +1,9 @@
-from torch.utils.data import Dataset, DataLoader
 import re
 from collections import Counter
+
 import torch
+from torch.utils.data import DataLoader, Dataset
+
 
 class TextDataset(Dataset):
     def __init__(self, texts, labels, vocab, max_len):
@@ -34,14 +36,13 @@ def build_vocab(texts, min_freq=2):
             vocab[token] = len(vocab)
     return vocab
 
-def get_data_loaders(config, texts, labels):
-    from sklearn.model_selection import train_test_split
-    train_texts, val_texts, train_labels, val_labels = train_test_split(
-        texts, labels, test_size=0.1, random_state=42
-    )
+def get_data_loaders(config, train_texts, train_labels, val_texts, val_labels):
     vocab = build_vocab(train_texts)
+
     train_ds = TextDataset(train_texts, train_labels, vocab, config["data"]["max_seq_len"])
     val_ds = TextDataset(val_texts, val_labels, vocab, config["data"]["max_seq_len"])
+
     train_loader = DataLoader(train_ds, batch_size=config["data"]["batch_size"], shuffle=True)
     val_loader = DataLoader(val_ds, batch_size=config["data"]["batch_size"])
+
     return train_loader, val_loader, vocab
