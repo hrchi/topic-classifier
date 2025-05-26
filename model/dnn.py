@@ -9,7 +9,11 @@ class DNNClassifier(nn.Module):
         self.dropout_rate = dropout
 
         self.fc1 = nn.Linear(embedding_dim, hidden_dim)
+        self.bn1 = nn.BatchNorm1d(hidden_dim)
+        
         self.fc2 = nn.Linear(hidden_dim, hidden_dim)
+        self.bn2 = nn.BatchNorm1d(hidden_dim)
+        
         self.fc3 = nn.Linear(hidden_dim, num_classes)
 
     def forward(self, x):
@@ -17,10 +21,12 @@ class DNNClassifier(nn.Module):
         pooled = embedded.mean(dim=1)
         
         x = self.fc1(pooled)
+        x = self.bn1(x)
         x = F.relu(x)
         x = F.dropout(x, self.dropout_rate, training=self.training)
         
         x = self.fc2(x)
+        x = self.bn2(x)
         x = F.relu(x)
         x = F.dropout(x, self.dropout_rate, training=self.training)
         

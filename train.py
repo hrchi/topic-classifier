@@ -56,8 +56,13 @@ def train_model(config):
 
         avg_loss = total_loss / len(train_loader)
         print(f"Epoch {epoch+1} complete. Avg training loss: {avg_loss:.4f}")
+        #print training scores
+        train_acc, train_f1 = evaluate(model, train_loader, device)
+        print(f"Train Accuracy: {train_acc:.4f}, Train Macro F1: {train_f1:.4f}")
 
-        # 🔍 Validation check
+
+        # Validation check
+        model.eval()
         val_acc, val_f1 = evaluate(model, val_loader, device)
         print(f"Val Accuracy: {val_acc:.4f}, Val Macro F1: {val_f1:.4f}")
 
@@ -69,7 +74,7 @@ def train_model(config):
         #check for early stopping
         if early_stopper(val_f1):
             print("Early stopping triggered.")
-            break
+            #break
     # Save vocab
     with open(vocab_path, "wb") as f:
         pickle.dump(vocab, f)
