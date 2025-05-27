@@ -31,6 +31,15 @@ def train_model(config):
         lr=config["training"]["lr"],
         weight_decay=config["training"]["weight_decay"]
     )
+
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+      optimizer,
+      mode='max',           # because we want to maximize F1
+      factor=0.5,           # reduce LR by 50% when plateau hits
+      patience=2,           # wait 2 epochs before reducing
+      verbose=True          # optional: logs when LR changes
+    )
+
     criterion = nn.CrossEntropyLoss()
 
     best_f1 = 0.0  # For tracking best model
@@ -48,6 +57,7 @@ def train_model(config):
             logits = model(x_batch)
             loss = criterion(logits, y_batch)
             loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
             optimizer.step()
             total_loss += loss.item()
 
@@ -60,11 +70,11 @@ def train_model(config):
         train_acc, train_f1 = evaluate(model, train_loader, device)
         print(f"Train Accuracy: {train_acc:.4f}, Train Macro F1: {train_f1:.4f}")
 
-
         # Validation check
         model.eval()
         val_acc, val_f1 = evaluate(model, val_loader, device)
         print(f"Val Accuracy: {val_acc:.4f}, Val Macro F1: {val_f1:.4f}")
+        scheduler.step(val_f1)
 
         # Save best model (optional)
         if val_f1 > best_f1:
@@ -74,7 +84,7 @@ def train_model(config):
         #check for early stopping
         if early_stopper(val_f1):
             print("Early stopping triggered.")
-            #break
+            break
     # Save vocab
     with open(vocab_path, "wb") as f:
         pickle.dump(vocab, f)
