@@ -25,10 +25,10 @@ class DNNClassifier(nn.Module):
         x = F.relu(x)
         x = F.dropout(x, self.dropout_rate, training=self.training)
         
-        x = self.fc2(x)
-        x = self.bn2(x)
-        x = F.relu(x)
-        x = F.dropout(x, self.dropout_rate, training=self.training)
+        #x = self.fc2(x)
+        #x = self.bn2(x)
+        #x = F.relu(x)
+        #x = F.dropout(x, self.dropout_rate, training=self.training)
         
         x = self.fc3(x)
         return x

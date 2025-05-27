@@ -37,7 +37,6 @@ def train_model(config):
       mode='max',           # because we want to maximize F1
       factor=0.5,           # reduce LR by 50% when plateau hits
       patience=2,           # wait 2 epochs before reducing
-      verbose=True          # optional: logs when LR changes
     )
 
     criterion = nn.CrossEntropyLoss()
@@ -75,11 +74,15 @@ def train_model(config):
         val_acc, val_f1 = evaluate(model, val_loader, device)
         print(f"Val Accuracy: {val_acc:.4f}, Val Macro F1: {val_f1:.4f}")
         scheduler.step(val_f1)
+        current_lr = optimizer.param_groups[0]['lr']
+        print(f"Current learning rate: {current_lr}")
 
         # Save best model (optional)
         if val_f1 > best_f1:
             best_f1 = val_f1
             torch.save(model.state_dict(), model_path)
+            print(f"Best model updated (F1 = {best_f1:.4f})")
+        else: #remind us about best
             print(f"Best model updated (F1 = {best_f1:.4f})")
         #check for early stopping
         if early_stopper(val_f1):

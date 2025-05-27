@@ -10,13 +10,13 @@ model:
   type: dnn  # you can later switch to "lstm" or "transformer"
   embedding_dim: 100
   hidden_dim: 256
-  dropout: 0.2
+  dropout: 0.3
   num_classes: 4
 
 training:
-  epochs: 40
+  epochs: 15
   patience: 5
-  lr: 0.0007
+  lr: 0.0010
   weight_decay: 0.0001
 
 misc:
