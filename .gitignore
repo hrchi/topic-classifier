@@ -1,3 +1,9 @@
-topicClass/
-__pycache__/
 .vscode/
+__pycache__/
+*.py[cod]
+**/__pycache__/
+# Virtual environment
+venv/
+env/
+topicClass/Lib/
+topicClass/

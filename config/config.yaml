@@ -7,11 +7,13 @@ data:
   val_split: 0.1
 
 model:
-  type: dnn  # you can later switch to "lstm" or "transformer"
-  embedding_dim: 100
-  hidden_dim: 256
-  dropout: 0.3
+  type: transformer  # dnn or transformer
   num_classes: 4
+  dropout: 0.1 #0.3 for dnn
+  embedding_dim: 128 #100 for dnn
+  hidden_dim: 256 #for dnn
+  num_heads: 4 #for transformer
+  num_layers: 2 #for transformer
 
 training:
   epochs: 15
