@@ -1,6 +1,5 @@
 from model.dnn import DNNClassifier
-from model.transformer import \
-    TransformerClassifier  # <- we'll create this next
+from model.transformer import TransformerClassifier
 
 
 def build_model(config, vocab_size):

@@ -8,7 +8,7 @@ from utils.eval_utils import evaluate
 
 
 def evaluate_model(config):
-    print("🔍 Running final evaluation on test set...")
+    print("Running final evaluation on test set...")
 
     test_loader, vocab = prepare_eval_loader(config)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -25,4 +25,4 @@ def evaluate_model(config):
     model.load_state_dict(torch.load(model_path, map_location=device))
 
     acc, f1 = evaluate(model, test_loader, device)
-    print(f"✅ Test Accuracy: {acc:.4f}, Macro F1: {f1:.4f}")
+    print(f"Test Accuracy: {acc:.4f}, Macro F1: {f1:.4f}")
