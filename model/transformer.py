@@ -10,10 +10,10 @@ class TransformerClassifier(nn.Module):
         self.positional = nn.Parameter(torch.randn(1, max_len, embedding_dim))  # learned positional encoding
 
         encoder_layer = nn.TransformerEncoderLayer(
-            d_model=embedding_dim,
-            nhead=num_heads,
-            dropout=dropout,
-            batch_first=True
+            d_model = embedding_dim,
+            nhead = num_heads,
+            dropout = dropout,
+            batch_first = True
         )
         self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
 

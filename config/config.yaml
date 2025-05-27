@@ -3,7 +3,7 @@ mode: train  # "train" or "eval"
 data:
   dataset_name: ag_news
   batch_size: 64
-  max_seq_len: 128
+  max_seq_len: 100 #128 I changed to 100 for now
   val_split: 0.1
 
 model:
