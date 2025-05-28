@@ -5,6 +5,7 @@ data:
   batch_size: 64
   max_seq_len: 100 #128 I changed to 100 for now
   val_split: 0.1
+  padding: auto  # "auto" = dynamic for transformer, static for dnn (default behavior)
 
 model:
   type: transformer  # dnn or transformer

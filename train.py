@@ -5,6 +5,7 @@ import torch.nn as nn
 import torch.optim as optim
 
 from model.dnn import DNNClassifier
+from model.transformer import TransformerClassifier
 from utils.data_utils import prepare_data_loaders
 from utils.early_stopping import EarlyStopping
 from utils.eval_utils import evaluate  # ← shared evaluator
@@ -18,13 +19,29 @@ def train_model(config):
 
     # Setup model and training components
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = DNNClassifier(
-        vocab_size=len(vocab),
-        embedding_dim=config["model"]["embedding_dim"],
-        hidden_dim=config["model"]["hidden_dim"],
-        num_classes=config["model"]["num_classes"],
-        dropout=config["model"]["dropout"]
-    ).to(device)
+    
+    model_type = config["model"]["type"]
+
+    if model_type == "dnn":
+        model = DNNClassifier(
+            vocab_size=len(vocab),
+            embedding_dim=config["model"]["embedding_dim"],
+            hidden_dim=config["model"]["hidden_dim"],
+            num_classes=config["model"]["num_classes"],
+            dropout=config["model"]["dropout"]
+        ).to(device)
+    elif model_type == "transformer":
+        model = TransformerClassifier(
+            vocab_size=len(vocab),
+            embedding_dim=config["model"]["embedding_dim"],
+            num_classes=config["model"]["num_classes"],
+            max_len=config["data"]["max_seq_len"],
+            num_heads=config["model"]["num_heads"],
+            num_layers=config["model"]["num_layers"],
+            dropout=config["model"]["dropout"]
+        ).to(device)
+    else:
+        raise ValueError(f"Unsupported model type: {model_type}")
 
     optimizer = optim.Adam(
         model.parameters(),
@@ -50,10 +67,20 @@ def train_model(config):
         model.train()
         total_loss = 0
 
-        for i, (x_batch, y_batch) in enumerate(train_loader):
-            x_batch, y_batch = x_batch.to(device), y_batch.to(device)
-            optimizer.zero_grad()
-            logits = model(x_batch)
+        for i, batch in enumerate(train_loader):
+            if model_type == "transformer":
+                x_batch, y_batch, src_key_padding_mask = batch
+                x_batch = x_batch.to(device)
+                y_batch = y_batch.to(device)
+                src_key_padding_mask = src_key_padding_mask.to(device)
+                logits = model(x_batch, src_key_padding_mask=src_key_padding_mask)
+            else:
+                x_batch, y_batch = batch
+                x_batch = x_batch.to(device)
+                y_batch = y_batch.to(device)
+                logits = model(x_batch)
+
+
             loss = criterion(logits, y_batch)
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
