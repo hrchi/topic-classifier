@@ -93,7 +93,7 @@ def train_model(config):
         avg_loss = total_loss / len(train_loader)
         print(f"Epoch {epoch+1} complete. Avg training loss: {avg_loss:.4f}")
         #print training scores
-        train_acc, train_f1 = evaluate(model, train_loader, device)
+        train_acc, train_f1 = evaluate(model, train_loader, device, model_type=model_type)
         print(f"Train Accuracy: {train_acc:.4f}, Train Macro F1: {train_f1:.4f}")
 
         # Validation check
