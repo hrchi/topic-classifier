@@ -58,7 +58,7 @@ def train_model(config):
 
     criterion = nn.CrossEntropyLoss()
 
-    best_f1 = 0.0  # For tracking best model
+    best_avg_f1 = 0.0  # For tracking best model
     early_stopper = EarlyStopping(patience=config["training"].get("patience", 3), mode="max")
 
     # Training loop
@@ -104,13 +104,14 @@ def train_model(config):
         current_lr = optimizer.param_groups[0]['lr']
         print(f"Current learning rate: {current_lr}")
 
+        avg_f1 = (train_f1 + val_f1) / 2
         # Save best model (optional)
-        if val_f1 > best_f1:
-            best_f1 = val_f1
+        if avg_f1 > best_avg_f1:
+            best_avg_f1 = avg_f1
             torch.save(model.state_dict(), model_path)
-            print(f"Best model updated (F1 = {best_f1:.4f})")
+            print(f"Best model updated (F1 = {best_avg_f1:.4f})")
         else: #remind us about best
-            print(f"Best model updated (F1 = {best_f1:.4f})")
+            print(f"Best model updated (F1 = {best_avg_f1:.4f})")
         #check for early stopping
         if early_stopper(val_f1):
             print("Early stopping triggered.")
