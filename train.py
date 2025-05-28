@@ -98,7 +98,7 @@ def train_model(config):
 
         # Validation check
         model.eval()
-        val_acc, val_f1 = evaluate(model, val_loader, device)
+        val_acc, val_f1 = evaluate(model, val_loader, device, model_type=model_type)
         print(f"Val Accuracy: {val_acc:.4f}, Val Macro F1: {val_f1:.4f}")
         scheduler.step(val_f1)
         current_lr = optimizer.param_groups[0]['lr']
