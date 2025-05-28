@@ -27,7 +27,7 @@ class TransformerClassifier(nn.Module):
         # Apply attention mask
         encoded = self.encoder(embed, src_key_padding_mask=src_key_padding_mask)  # [B, L, D]
 
-                # Masked mean pooling
+        # Masked mean pooling
         if src_key_padding_mask is not None:
             # Mask: False = keep, True = pad → invert for pooling
             mask = ~src_key_padding_mask  # [B, L], now True = valid token
